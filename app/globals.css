@@ -20,6 +20,11 @@ body {
   height: 100vh;
 }
 
+html.dark body {
+  background-color: black;
+  color: white;
+}
+
 *:focus {
   outline: none;
 }
