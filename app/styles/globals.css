@@ -18,6 +18,12 @@
 body {
   font-family: 'Sour Gummy', sans-serif;
   height: 100vh;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.top-container {
+  transition: background-color 200ms ease, color 200ms ease,
+    border-color 200ms ease;
 }
 
 html.dark body {
