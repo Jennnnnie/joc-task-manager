@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <div className='top-container'>
       <div className='text-center mx-auto'>
-        <h1 className='text-3x1 font-bold'>Welcome to your Task Manager</h1>
+        <h1 className='text-6xl font-bold m-5'>Welcome to your Task Manager</h1>
       </div>
       <button
         onClick={() => setDarkMode(!darkMode)}
