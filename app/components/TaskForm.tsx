@@ -1,10 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTasks } from '../utils/TaskContext';
 import { useDarkMode } from '../utils/DarkModeContext';
 
-export default function TaskForm() {
+export default function TaskForm({
+  selectedTask,
+  onFormSubmit,
+}: {
+  selectedTask: any;
+  onFormSubmit?: () => void;
+}) {
   const [tasks, dispatch] = useTasks();
   const { darkMode } = useDarkMode();
 
@@ -15,6 +21,13 @@ export default function TaskForm() {
     dueDate: '',
   });
 
+  // Populate the form when a task is selected for editing
+  useEffect(() => {
+    if (selectedTask) {
+      setFormState(selectedTask);
+    }
+  }, [selectedTask]);
+
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormState((prev) => ({ ...prev, [name]: value }));
@@ -23,14 +36,17 @@ export default function TaskForm() {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     if (formState.id) {
+      // Update an existing task
       dispatch({ type: 'editTask', payload: formState });
     } else {
+      // Add a new task
       dispatch({
         type: 'addTask',
         payload: { ...formState, id: Date.now().toString() },
       });
     }
-    setFormState({ id: '', name: '', description: '', dueDate: '' });
+    setFormState({ id: '', name: '', description: '', dueDate: '' }); // Reset the form
+    onFormSubmit && onFormSubmit(); // Notify parent that editing is done
   };
 
   return (

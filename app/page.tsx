@@ -1,17 +1,27 @@
 'use client';
 
+import { useState } from 'react';
+import { useDarkMode } from './utils/DarkModeContext';
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
-import { useDarkMode } from './utils/DarkModeContext';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 export default function Home() {
   const { darkMode, setDarkMode } = useDarkMode();
+  const [selectedTask, setSelectedTask] = useState(null);
+
+  // const handleEdit = (task: any) => {
+  //   setSelectedTask(task); // Set the selected task for editing
+  // };
+
+  const handleFormSubmit = () => {
+    setSelectedTask(null); // Clear the selected task after submission
+  };
 
   return (
     <div className='top-container'>
       <div className='text-center mx-auto'>
-        <h1 className='text-6xl font-bold m-5'>Welcome to your Task Manager</h1>
+        <h1 className='text-3x1 font-bold'>Welcome to your Task Manager</h1>
       </div>
       <button
         onClick={() => setDarkMode(!darkMode)}
@@ -23,8 +33,9 @@ export default function Home() {
           <MdDarkMode size={24} className='text-gray-800' />
         )}
       </button>
-      <TaskForm />
+      <TaskForm selectedTask={selectedTask} onFormSubmit={handleFormSubmit} />
       <TaskList />
+      {/* <TaskList onEdit={handleEdit} /> */}
     </div>
   );
 }
