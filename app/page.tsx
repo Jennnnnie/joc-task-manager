@@ -1,6 +1,7 @@
 'use client';
 
 import TaskForm from './components/TaskForm';
+import TaskList from './components/TaskList';
 import { useDarkMode } from './utils/DarkModeContext';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
@@ -23,6 +24,7 @@ export default function Home() {
         )}
       </button>
       <TaskForm />
+      <TaskList />
     </div>
   );
 }
