@@ -1,5 +1,7 @@
 'use client';
 
+import { FaExclamation } from 'react-icons/fa';
+
 import { useDarkMode } from '../utils/DarkModeContext';
 
 export default function Sidebar() {
@@ -52,21 +54,27 @@ export default function Sidebar() {
         </h2>
         <ul className='mt-4 space-y-2'>
           <li className='flex items-center space-x-2'>
-            <span className='w-3 h-3 bg-coral rounded-full'></span>
+            <span className='w-3 h-3 bg-green-300 rounded-full'></span>
             <span className={`${darkMode ? 'text-cream' : 'text-navy'}`}>
               Work
             </span>
           </li>
           <li className='flex items-center space-x-2'>
-            <span className='w-3 h-3 bg-green rounded-full'></span>
+            <span className='w-3 h-3 bg-blue-300 rounded-full'></span>
             <span className={`${darkMode ? 'text-cream' : 'text-navy'}`}>
               Events
             </span>
           </li>
           <li className='flex items-center space-x-2'>
-            <span className='w-3 h-3 bg-yellow rounded-full'></span>
+            <span className='w-3 h-3 bg-purple-300 rounded-full'></span>
             <span className={`${darkMode ? 'text-cream' : 'text-navy'}`}>
               Personal
+            </span>
+          </li>
+          <li className='flex items-center space-x-2'>
+            <FaExclamation className='text-red-500' />
+            <span className={`${darkMode ? 'text-cream' : 'text-navy'}`}>
+              Important!
             </span>
           </li>
         </ul>
