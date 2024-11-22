@@ -15,6 +15,19 @@
   }
 } */
 
+:root {
+  --cream: #f9f8f4;
+  --coral: #e66b5b;
+  --navy: #3e4c59;
+  --green: #7f9a8a;
+  --yellow: #f4d06f;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--navy);
+}
+
 body {
   font-family: 'Sour Gummy', sans-serif;
   height: 100vh;
