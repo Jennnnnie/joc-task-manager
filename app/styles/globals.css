@@ -20,7 +20,8 @@
   --coral: #e66b5b;
   --navy: #3e4c59;
   --green: #7f9a8a;
-  --yellow: #f4d06f;
+  --yellow: #f2cc8f;
+  --lightyellow: #f3ffb6;
   --purple: #a69cac;
 }
 
@@ -47,4 +48,12 @@ html.dark body {
 
 *:focus {
   outline: none;
+}
+
+button {
+  transition: trasnform 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.2) translateY(3px);
 }

@@ -38,12 +38,16 @@ export default function TaskList() {
   };
 
   return (
-    <div className='task-list'>
+    <div
+      className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ${
+        darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
+      } p-4 rounded-lg`}
+    >
       {tasks.map((task: any) => (
         <div
           key={task.id}
-          className={`task-item border p-4 rounded shadow mb-2 ${
-            darkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-black'
+          className={`border p-4 rounded shadow ${
+            darkMode ? 'bg-purple text-cream ' : 'bg-yellow text-navy '
           }`}
         >
           {editingTaskId === task.id ? (
@@ -55,7 +59,7 @@ export default function TaskList() {
                 value={editingTask.name}
                 onChange={handleChange}
                 className={`block w-full mb-2 p-2 border rounded ${
-                  darkMode ? 'bg-gray-600 text-white' : 'bg-gray-200 text-black'
+                  darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
                 }`}
               />
               <textarea
@@ -63,7 +67,7 @@ export default function TaskList() {
                 value={editingTask.description}
                 onChange={handleChange}
                 className={`block w-full mb-2 p-2 border rounded ${
-                  darkMode ? 'bg-gray-600 text-white' : 'bg-gray-200 text-black'
+                  darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
                 }`}
               />
               <input
@@ -72,7 +76,7 @@ export default function TaskList() {
                 value={editingTask.dueDate}
                 onChange={handleChange}
                 className={`block w-full mb-2 p-2 border rounded ${
-                  darkMode ? 'bg-gray-600 text-white' : 'bg-gray-200 text-black'
+                  darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
                 }`}
               />
               <div className='flex gap-2'>
@@ -80,8 +84,8 @@ export default function TaskList() {
                   onClick={handleSaveEdit}
                   className={`px-2 py-1 rounded ${
                     darkMode
-                      ? 'bg-blue-400 text-black hover:bg-blue-500'
-                      : 'bg-blue-500 text-white hover:bg-blue-600'
+                      ? 'bg-green text-navy hover:bg-purple'
+                      : 'bg-coral text-cream hover:bg-yellow'
                   }`}
                 >
                   Save
@@ -90,8 +94,8 @@ export default function TaskList() {
                   onClick={handleCancelEdit}
                   className={`px-2 py-1 rounded ${
                     darkMode
-                      ? 'bg-gray-500 text-black hover:bg-gray-600'
-                      : 'bg-gray-300 text-black hover:bg-gray-400'
+                      ? 'bg-gray-500 text-navy hover:bg-gray-600'
+                      : 'bg-gray-300 text-navy hover:bg-gray-400'
                   }`}
                 >
                   Cancel
@@ -103,20 +107,14 @@ export default function TaskList() {
             <div>
               <h2 className='font-bold text-lg'>{task.name}</h2>
               <p>{task.description}</p>
-              <p
-                className={`text-sm ${
-                  darkMode ? 'text-gray-300' : 'text-gray-600'
-                }`}
-              >
-                Due: {task.dueDate}
-              </p>
+              <p className='text-sm'>Due: {task.dueDate}</p>
               <div className='flex gap-2 mt-2'>
                 <button
                   onClick={() => handleEditClick(task)}
                   className={`px-2 py-1 rounded ${
                     darkMode
-                      ? 'bg-blue-400 text-black hover:bg-blue-500'
-                      : 'bg-blue-500 text-white hover:bg-blue-600'
+                      ? 'bg-cream text-navy hover:bg-green hover:text-cream'
+                      : 'bg-navy text-cream hover:bg-coral'
                   }`}
                 >
                   Edit
@@ -125,8 +123,8 @@ export default function TaskList() {
                   onClick={() => handleDelete(task.id)}
                   className={`px-2 py-1 rounded ${
                     darkMode
-                      ? 'bg-red-400 text-black hover:bg-red-500'
-                      : 'bg-red-500 text-white hover:bg-red-600'
+                      ? 'bg-cream text-navy hover:bg-green hover:text-cream'
+                      : 'bg-navy text-cream hover:bg-coral'
                   }`}
                 >
                   Delete

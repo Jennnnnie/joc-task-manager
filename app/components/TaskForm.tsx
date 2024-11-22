@@ -21,7 +21,6 @@ export default function TaskForm({
     dueDate: '',
   });
 
-  // Populate the form when a task is selected for editing
   useEffect(() => {
     if (selectedTask) {
       setFormState(selectedTask);
@@ -46,14 +45,14 @@ export default function TaskForm({
       });
     }
     setFormState({ id: '', name: '', description: '', dueDate: '' }); // Reset the form
-    onFormSubmit && onFormSubmit(); // Notify parent that editing is done
+    onFormSubmit && onFormSubmit(); // Notify that editing is done
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className={`task-form border p-4 rounded m-10 ${
-        darkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-black'
+      className={`border p-4 rounded-lg shadow-md ${
+        darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
       }`}
     >
       <input
@@ -64,7 +63,7 @@ export default function TaskForm({
         onChange={handleChange}
         required
         className={`block w-full mb-2 p-2 border rounded ${
-          darkMode ? 'bg-gray-600 text-white' : 'bg-gray-200 text-black'
+          darkMode ? 'bg-purple text-cream' : 'bg-yellow text-navy'
         }`}
       />
       <textarea
@@ -74,7 +73,7 @@ export default function TaskForm({
         onChange={handleChange}
         required
         className={`block w-full mb-2 p-2 border rounded ${
-          darkMode ? 'bg-gray-600 text-white' : 'bg-gray-200 text-black'
+          darkMode ? 'bg-purple text-cream' : 'bg-yellow text-navy'
         }`}
       ></textarea>
       <input
@@ -84,15 +83,13 @@ export default function TaskForm({
         onChange={handleChange}
         required
         className={`block w-full mb-2 p-2 border rounded ${
-          darkMode ? 'bg-gray-600 text-white' : 'bg-gray-200 text-black'
+          darkMode ? 'bg-purple text-cream' : 'bg-yellow text-navy'
         }`}
       />
       <button
         type='submit'
         className={`px-4 py-2 rounded ${
-          darkMode
-            ? 'bg-blue-400 text-black hover:bg-blue-500'
-            : 'bg-blue-500 text-white hover:bg-blue-600'
+          darkMode ? 'bg-green text-navy ' : 'bg-coral text-cream '
         }`}
       >
         {formState.id ? 'Update Task' : 'Add Task'}
