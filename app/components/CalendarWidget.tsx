@@ -57,7 +57,7 @@ export default function CalendarWidget() {
         darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
       }`}
       style={{
-        height: '700px', // Adjust the height to make the widget visually longer
+        height: '850px', // Adjust the height to make the widget visually longer
       }}
     >
       <div className='flex items-center justify-between mb-6'>

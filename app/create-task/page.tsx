@@ -15,8 +15,11 @@ export default function CreateTask() {
     >
       <Sidebar />
       <main className='flex-1 p-6'>
-        <h1 className='text-3xl font-bold mb-6'>Create New Task</h1>
-        <div className='max-w-3xl mx-auto'>
+        <h1 className='text-4xl font-bold mb-8 text-center'>Create New Task</h1>
+        <div
+          className={`mx-auto p-8 rounded-lg shadow-lg`}
+          style={{ maxWidth: '1500px', minHeight: '600px' }}
+        >
           <TaskForm selectedTask={null} onFormSubmit={() => {}} />
         </div>
       </main>

@@ -25,15 +25,25 @@
   --graypurple: #a69cac;
 }
 
+html,
 body {
-  background-color: white;
-  color: var(--navy);
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--navy);
+  color: var(--cream);
+  font-family: 'Sour Gummy', sans-serif;
+  overflow-x: hidden;
 }
 
-body {
-  font-family: 'Sour Gummy', sans-serif;
-  height: 100vh;
-  transition: background-color 200ms ease, color 200ms ease;
+body.dark {
+  background-color: var(--navy);
+  color: var(--cream);
+}
+
+body.light {
+  background-color: var(--cream);
+  color: var(--navy);
 }
 
 .top-container {

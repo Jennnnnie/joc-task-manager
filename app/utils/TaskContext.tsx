@@ -13,13 +13,15 @@ type Task = {
   name: string;
   description: string;
   dueDate: string;
+  completed: boolean; // Add this property
 };
 
 type TaskAction =
   | { type: 'addTask'; payload: Task }
   | { type: 'editTask'; payload: Task }
   | { type: 'deleteTask'; payload: string }
-  | { type: 'setTasks'; payload: Task[] };
+  | { type: 'setTasks'; payload: Task[] }
+  | { type: 'toggleComplete'; payload: string }; // New action to toggle completion
 
 const TasksReducer = (state: Task[], action: TaskAction): Task[] => {
   switch (action.type) {
@@ -33,6 +35,12 @@ const TasksReducer = (state: Task[], action: TaskAction): Task[] => {
       return state.filter((task) => task.id !== action.payload);
     case 'setTasks':
       return action.payload;
+    case 'toggleComplete': // New case
+      return state.map((task) =>
+        task.id === action.payload
+          ? { ...task, completed: !task.completed }
+          : task
+      );
     default:
       return state;
   }

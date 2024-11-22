@@ -1,40 +1,37 @@
 'use client';
 
-import { useDarkMode } from './utils/DarkModeContext';
 import Sidebar from './components/Sidebar';
 import TaskWidget from './components/TaskWidget';
 import CalendarWidget from './components/CalendarWidget';
-import { MdDarkMode, MdLightMode } from 'react-icons/md';
+import CompletedTasks from './components/CompletedTasks';
+import MissedTasks from './components/MissedTasks';
+import { useDarkMode } from './utils/DarkModeContext';
 
 export default function Home() {
-  const { darkMode, setDarkMode } = useDarkMode();
+  const { darkMode } = useDarkMode();
 
   return (
     <div
-      className={`flex h-screen ${
+      className={`min-h-screen flex flex-col ${
         darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
       }`}
     >
-      <Sidebar />
-      <main className='flex-1 p-6 overflow-auto'>
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className={`fixed top-4 right-4 px-6 py-3 rounded-full flex items-center gap-2 transition duration-200 ease-in-out ${
-            darkMode ? ' text-cream ' : ' text-navy '
-          }`}
-        >
-          {darkMode ? <MdLightMode size={35} /> : <MdDarkMode size={35} />}
-        </button>
-        <div className='text-center mb-8'>
-          <h1 className='text-5xl font-bold'>Your Task Manager</h1>
-        </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-          <TaskWidget />
-          <div className='col-span-2'>
+      <div className='flex flex-1'>
+        <Sidebar />
+        <main className='flex-1 p-6'>
+          <div className='text-center mb-6'>
+            <h1 className='text-4xl font-bold'>Your Task Manager</h1>
+          </div>
+          <div className='mt-4'>
             <CalendarWidget />
           </div>
-        </div>
-      </main>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mt-8'>
+            <TaskWidget />
+            <CompletedTasks />
+            <MissedTasks />
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
