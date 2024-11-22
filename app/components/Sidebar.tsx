@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useDarkMode } from '../utils/DarkModeContext';
+import { FaExclamation } from 'react-icons/fa'; // Import FaExclamation from FontAwesome
 
 export default function Sidebar() {
   const { darkMode } = useDarkMode();
@@ -23,7 +24,6 @@ export default function Sidebar() {
 
       <nav className='mt-8'>
         <ul className='space-y-4'>
-          {/* Dashboard Link */}
           <li
             className={`cursor-pointer hover:underline ${
               darkMode
@@ -34,7 +34,6 @@ export default function Sidebar() {
           >
             Dashboard
           </li>
-          {/* Create New Task Link */}
           <li
             className={`cursor-pointer hover:underline ${
               darkMode
@@ -45,7 +44,6 @@ export default function Sidebar() {
           >
             Create New Task
           </li>
-          {/* My Tasks Link */}
           <li
             className={`cursor-pointer hover:underline ${
               darkMode
@@ -84,6 +82,14 @@ export default function Sidebar() {
             <span className='w-3 h-3 bg-purple-300 rounded-full'></span>
             <span className={`${darkMode ? 'text-cream' : 'text-navy'}`}>
               Personal
+            </span>
+          </li>
+          {/* Important Category with the red exclamation icon */}
+          <li className='flex items-center space-x-2'>
+            <FaExclamation className='w-3 h-3 text-red-500' />{' '}
+            {/* Exclamation Icon */}
+            <span className={`${darkMode ? 'text-cream' : 'text-navy'}`}>
+              Important
             </span>
           </li>
         </ul>

@@ -25,7 +25,7 @@ export default function TaskWidget() {
       <h2 className='text-lg font-bold mb-4'>Upcoming Tasks</h2>
       {upcomingTasks.length > 0 ? (
         <ul className='space-y-2'>
-          {upcomingTasks.slice(0, 5).map((task: any) => (
+          {upcomingTasks.slice(0, 10).map((task: any) => (
             <li
               key={task.id}
               className={`flex items-center justify-between p-2 rounded-md ${
