@@ -10,12 +10,12 @@ export default function Sidebar() {
   return (
     <div
       className={`w-1/6 p-4 border-r ${
-        darkMode ? 'bg-navy text-cream' : 'bg-white text-navy'
+        darkMode ? 'bg-navy text-cream' : 'bg-yellow text-navy'
       }`}
     >
       <h1
         className={`text-2xl font-bold border rounded-lg text-center underline p-3 ${
-          darkMode ? 'bg-purple text-cream' : 'bg-purple text-navy'
+          darkMode ? 'bg-graypurple text-cream' : 'bg-coral text-navy'
         }`}
       >
         Organize

@@ -18,7 +18,7 @@ export default function TaskWidget() {
   return (
     <div
       className={`p-4 rounded-lg shadow-md ${
-        darkMode ? 'bg-purple text-cream' : 'bg-cream text-navy'
+        darkMode ? 'bg-gray-500 text-cream' : 'bg-cream text-navy'
       }`}
     >
       <h2 className='text-lg font-bold mb-4'>Upcoming Tasks</h2>

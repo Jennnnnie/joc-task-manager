@@ -144,9 +144,9 @@ export default function TaskList() {
                   darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
                 }`}
               />
-              <div className={`mb-2`}>
+              <div className='mb-4'>
                 <label className='font-bold'>Category:</label>
-                <div className={`flex gap-2 mt-2`}>
+                <div className='flex gap-2 mt-2'>
                   {categories.map((category) => (
                     <div
                       key={category.value}
@@ -156,7 +156,9 @@ export default function TaskList() {
                           : 'bg-yellow text-navy'
                       } ${
                         editingTask.category === category.value
-                          ? 'ring-2 ring-offset-2 ring-coral'
+                          ? darkMode
+                            ? 'ring-2 ring-offset-3 ring-white'
+                            : 'ring-2 ring-offset-3 ring-navy'
                           : ''
                       }`}
                       onClick={() =>
@@ -171,6 +173,7 @@ export default function TaskList() {
                   ))}
                 </div>
               </div>
+
               <div>
                 <h4 className='font-bold mb-2'>Checklist</h4>
                 <ul className='mb-2 space-y-2'>
@@ -181,13 +184,41 @@ export default function TaskList() {
                         checked={item.completed}
                         onChange={() => handleChecklistChange(item.id)}
                       />
-                      <span
-                        className={`${
-                          item.completed ? 'line-through text-gray-500' : ''
+                      <input
+                        type='text'
+                        value={item.text}
+                        onChange={(e) =>
+                          setEditingTask((prev: any) => ({
+                            ...prev,
+                            checklist: prev.checklist.map((check: any) =>
+                              check.id === item.id
+                                ? { ...check, text: e.target.value }
+                                : check
+                            ),
+                          }))
+                        }
+                        className={`flex-1 p-2 border rounded ${
+                          darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
+                        }`}
+                      />
+                      <button
+                        type='button'
+                        onClick={() =>
+                          setEditingTask((prev: any) => ({
+                            ...prev,
+                            checklist: prev.checklist.filter(
+                              (check: any) => check.id !== item.id
+                            ),
+                          }))
+                        }
+                        className={`px-2 py-1 rounded ${
+                          darkMode
+                            ? 'bg-graypurple text-cream'
+                            : 'bg-yellow text-navy'
                         }`}
                       >
-                        {item.text}
-                      </span>
+                        Delete
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -205,9 +236,7 @@ export default function TaskList() {
                     type='button'
                     onClick={handleAddChecklistItem}
                     className={`px-2 py-1 rounded ${
-                      darkMode
-                        ? 'bg-green text-navy hover:bg-purple'
-                        : 'bg-coral text-cream hover:bg-yellow'
+                      darkMode ? 'text-cream' : 'text-navy'
                     }`}
                   >
                     Add
@@ -218,9 +247,7 @@ export default function TaskList() {
                 <button
                   onClick={handleSaveEdit}
                   className={`px-2 py-1 rounded ${
-                    darkMode
-                      ? 'bg-green text-navy hover:bg-purple'
-                      : 'bg-coral text-cream hover:bg-yellow'
+                    darkMode ? 'bg-white text-navy ' : 'bg-coral text-cream'
                   }`}
                 >
                   Save
@@ -229,7 +256,7 @@ export default function TaskList() {
                   onClick={handleCancelEdit}
                   className={`px-2 py-1 rounded ${
                     darkMode
-                      ? 'bg-gray-500 text-navy hover:bg-gray-600'
+                      ? 'bg-gray-500 text-cream hover:bg-gray-600'
                       : 'bg-gray-300 text-navy hover:bg-gray-400'
                   }`}
                 >
@@ -247,13 +274,28 @@ export default function TaskList() {
                   {task.checklist.map((item: any) => (
                     <li
                       key={item.id}
-                      className={`${
-                        item.completed
-                          ? 'line-through text-gray-500'
-                          : 'text-current'
+                      className={`flex items-center gap-2 ${
+                        item.completed ? 'line-through text-gray-500' : ''
                       }`}
                     >
-                      {item.text}
+                      <input
+                        type='checkbox'
+                        checked={item.completed}
+                        onChange={() =>
+                          dispatch({
+                            type: 'editTask',
+                            payload: {
+                              ...task,
+                              checklist: task.checklist.map((check: any) =>
+                                check.id === item.id
+                                  ? { ...check, completed: !check.completed }
+                                  : check
+                              ),
+                            },
+                          })
+                        }
+                      />
+                      <span>{item.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -263,7 +305,7 @@ export default function TaskList() {
                   onClick={() => handleEditClick(task)}
                   className={`px-2 py-1 rounded ${
                     darkMode
-                      ? 'bg-cream text-navy hover:bg-green hover:text-cream'
+                      ? 'bg-cream text-navy hover:bg-sagegreen hover:text-cream'
                       : 'bg-navy text-cream hover:bg-coral'
                   }`}
                 >
@@ -273,7 +315,7 @@ export default function TaskList() {
                   onClick={() => handleDelete(task.id)}
                   className={`px-2 py-1 rounded ${
                     darkMode
-                      ? 'bg-cream text-navy hover:bg-green hover:text-cream'
+                      ? 'bg-cream text-navy hover:bg-sagegreen hover:text-cream'
                       : 'bg-navy text-cream hover:bg-coral'
                   }`}
                 >

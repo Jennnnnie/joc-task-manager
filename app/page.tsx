@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useDarkMode } from './utils/DarkModeContext';
 import Sidebar from './components/Sidebar';
 import TaskWidget from './components/TaskWidget';
+import CalendarWidget from './components/CalendarWidget';
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
@@ -41,6 +42,9 @@ export default function Home() {
             selectedTask={selectedTask}
             onFormSubmit={handleFormSubmit}
           />
+          <div className='lg:col-span-3'>
+            <CalendarWidget />
+          </div>
           <div className='lg:col-span-3'>
             <TaskList />
           </div>
