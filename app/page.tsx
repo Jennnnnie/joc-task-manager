@@ -1,21 +1,13 @@
 'use client';
 
-import { useState } from 'react';
 import { useDarkMode } from './utils/DarkModeContext';
 import Sidebar from './components/Sidebar';
 import TaskWidget from './components/TaskWidget';
 import CalendarWidget from './components/CalendarWidget';
-import TaskForm from './components/TaskForm';
-import TaskList from './components/TaskList';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 export default function Home() {
   const { darkMode, setDarkMode } = useDarkMode();
-  const [selectedTask, setSelectedTask] = useState(null);
-
-  const handleFormSubmit = () => {
-    setSelectedTask(null); // Clear the selected task after submission
-  };
 
   return (
     <div
@@ -34,19 +26,12 @@ export default function Home() {
           {darkMode ? <MdLightMode size={35} /> : <MdDarkMode size={35} />}
         </button>
         <div className='text-center mb-8'>
-          <h1 className='text-5xl font-bold'>Welcome to Your Task Manager</h1>
+          <h1 className='text-5xl font-bold'>Your Task Manager</h1>
         </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-8'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           <TaskWidget />
-          <TaskForm
-            selectedTask={selectedTask}
-            onFormSubmit={handleFormSubmit}
-          />
-          <div className='lg:col-span-3'>
+          <div className='col-span-2'>
             <CalendarWidget />
-          </div>
-          <div className='lg:col-span-3'>
-            <TaskList />
           </div>
         </div>
       </main>

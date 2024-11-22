@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTasks } from '../utils/TaskContext';
 import { useDarkMode } from '../utils/DarkModeContext';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'; // Import React Icons
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 export default function CalendarWidget() {
   const [tasks] = useTasks();
@@ -14,16 +14,14 @@ export default function CalendarWidget() {
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
 
-  const todayFormatted = today.toISOString().split('T')[0]; // Format today as YYYY-MM-DD
+  const todayFormatted = today.toISOString().split('T')[0];
 
   const formatDate = (date: Date) => {
     return date.toISOString().split('T')[0];
   };
 
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
-
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   const tasksForSelectedDate = tasks.filter(
@@ -58,6 +56,9 @@ export default function CalendarWidget() {
       className={`p-8 rounded-lg shadow-md ${
         darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
       }`}
+      style={{
+        height: '700px', // Adjust the height to make the widget visually longer
+      }}
     >
       <div className='flex items-center justify-between mb-6'>
         <button
@@ -86,7 +87,7 @@ export default function CalendarWidget() {
       <div
         className='grid grid-cols-7 gap-6 text-center'
         style={{
-          gridAutoRows: 'minmax(70px, auto)',
+          gridAutoRows: 'minmax(100px, auto)', // Make each cell taller
         }}
       >
         {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((day) => (
@@ -127,33 +128,6 @@ export default function CalendarWidget() {
           );
         })}
       </div>
-      {/* Display tasks for the selected date */}
-      {selectedDate && (
-        <div className='mt-6'>
-          <h3 className='text-lg font-bold'>
-            Tasks for {new Date(selectedDate).toLocaleDateString()}
-          </h3>
-          {tasksForSelectedDate.length > 0 ? (
-            <ul className='mt-2 space-y-2'>
-              {tasksForSelectedDate.map((task: any) => (
-                <li
-                  key={task.id}
-                  className={`p-2 rounded shadow ${
-                    darkMode ? 'bg-purple text-cream' : 'bg-yellow text-navy'
-                  }`}
-                >
-                  <h4 className='font-bold'>{task.name}</h4>
-                  <p>{task.description}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              No tasks for this day.
-            </p>
-          )}
-        </div>
-      )}
     </div>
   );
 }
