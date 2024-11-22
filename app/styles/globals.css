@@ -16,15 +16,16 @@
 } */
 
 :root {
-  --cream: #f9f8f4;
+  --cream: #e9edc9;
   --coral: #e66b5b;
   --navy: #3e4c59;
   --green: #7f9a8a;
   --yellow: #f4d06f;
+  --purple: #a69cac;
 }
 
 body {
-  background-color: var(--cream);
+  background-color: white;
   color: var(--navy);
 }
 

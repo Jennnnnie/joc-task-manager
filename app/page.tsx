@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useDarkMode } from './utils/DarkModeContext';
+import Sidebar from './components/Sidebar';
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
@@ -19,9 +20,14 @@ export default function Home() {
   };
 
   return (
-    <div className='top-container'>
+    <div
+      className={`flex h-screen ${
+        darkMode ? 'bg-gray-800 text-white' : 'bg-white text-navy'
+      }`}
+    >
+      <Sidebar />
       <div className='text-center mx-auto'>
-        <h1 className='text-3x1 font-bold'>Welcome to your Task Manager</h1>
+        <h1 className='text-5xl font-bold'>Welcome to your Task Manager</h1>
       </div>
       <button
         onClick={() => setDarkMode(!darkMode)}
