@@ -1,12 +1,12 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useTasks } from '../utils/TaskContext';
 import { useDarkMode } from '../utils/DarkModeContext';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 export default function CalendarWidget() {
-  const [tasks] = useTasks();
+  const [tasks, setTasks] = useState([]);
   const { darkMode } = useDarkMode();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [widgetPosition, setWidgetPosition] = useState<{
@@ -18,65 +18,53 @@ export default function CalendarWidget() {
   });
   const [widgetScale, setWidgetScale] = useState(0);
 
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch('/api/tasks');
+        if (!response.ok) {
+          throw new Error('Failed to fetch tasks');
+        }
+        const data = await response.json();
+        console.log('Fetched Tasks:', data);
+        setTasks(data);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
+
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
-
   const todayFormatted = today.toISOString().split('T')[0];
 
-  const formatDate = (date: Date) => {
-    return date.toISOString().split('T')[0];
-  };
-
+  const formatDate = (date: Date) => date.toISOString().split('T')[0];
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   const tasksForSelectedDate = tasks.filter(
-    (task: any) => task.dueDate === selectedDate
+    (task: any) => task.dueDate.split('T')[0] === selectedDate
   );
 
   const calendarRef = useRef(null);
 
-  const handleDayClick = (day: number) => {
+  const handleDayClick = (day: number, event: any) => {
     const clickedDate = formatDate(new Date(currentYear, currentMonth, day));
-
     if (clickedDate === selectedDate) {
-      setWidgetScale(0); // Zoom out (slide back into the number)
-      setSelectedDate(null); // Hide the task widget
+      setWidgetScale(0);
+      setSelectedDate(null);
     } else {
       setSelectedDate(clickedDate);
-
-      if (calendarRef.current) {
-        const selectedDayElement = document.getElementById(`day-${day}`);
-        if (selectedDayElement) {
-          const rect = selectedDayElement.getBoundingClientRect();
-          setWidgetPosition({
-            left: rect.left + rect.width / 2 - 150,
-            top: rect.top + rect.height / 2 - 200,
-          });
-        }
-      }
-
+      const rect = event.target.getBoundingClientRect();
+      setWidgetPosition({
+        left: rect.left + window.scrollX,
+        top: rect.top + window.scrollY - 100,
+      });
       setWidgetScale(1);
-    }
-  };
-
-  const handlePrevMonth = () => {
-    if (currentMonth === 0) {
-      setCurrentMonth(11);
-      setCurrentYear((prev) => prev - 1);
-    } else {
-      setCurrentMonth((prev) => prev - 1);
-    }
-  };
-
-  const handleNextMonth = () => {
-    if (currentMonth === 11) {
-      setCurrentMonth(0);
-      setCurrentYear((prev) => prev + 1);
-    } else {
-      setCurrentMonth((prev) => prev + 1);
     }
   };
 
@@ -86,13 +74,13 @@ export default function CalendarWidget() {
       className={`p-8 rounded-lg shadow-md ${
         darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
       }`}
-      style={{
-        height: '850px',
-      }}
+      style={{ minHeight: '700px' }}
     >
       <div className='flex items-center justify-between mb-6'>
         <button
-          onClick={handlePrevMonth}
+          onClick={() =>
+            setCurrentMonth((prev) => (prev === 0 ? 11 : prev - 1))
+          }
           className={`p-2 rounded-full transition-transform hover:scale-110 ${
             darkMode ? 'bg-gray-600 text-cream' : 'bg-yellow text-navy'
           }`}
@@ -106,7 +94,9 @@ export default function CalendarWidget() {
           })}
         </h2>
         <button
-          onClick={handleNextMonth}
+          onClick={() =>
+            setCurrentMonth((prev) => (prev === 11 ? 0 : prev + 1))
+          }
           className={`p-2 rounded-full transition-transform hover:scale-110 ${
             darkMode ? 'bg-gray-600 text-cream' : 'bg-yellow text-navy'
           }`}
@@ -116,9 +106,7 @@ export default function CalendarWidget() {
       </div>
       <div
         className='grid grid-cols-7 gap-6 text-center'
-        style={{
-          gridAutoRows: 'minmax(100px, auto)',
-        }}
+        style={{ gridAutoRows: '1fr' }}
       >
         {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((day) => (
           <span key={day} className='font-bold text-lg'>
@@ -133,67 +121,33 @@ export default function CalendarWidget() {
         {days.map((day) => {
           const date = formatDate(new Date(currentYear, currentMonth, day));
           const isToday = date === todayFormatted;
-          const isSelected = date === selectedDate;
-
           return (
             <button
-              id={`day-${day}`}
               key={day}
-              onClick={() => handleDayClick(day)}
-              className={`relative flex items-center justify-center h-full rounded-lg text-lg transition-transform hover:scale-110 ${
+              onClick={(event) => handleDayClick(day, event)}
+              className={`relative flex items-center justify-center h-14 w-14 rounded-full text-lg transition-transform hover:scale-110 ${
                 isToday
-                  ? darkMode
-                    ? 'bg-white text-navy'
-                    : 'bg-white text-navy'
-                  : isSelected
-                  ? darkMode
-                    ? 'bg-sagegreen text-cream'
-                    : 'bg-coral text-navy'
-                  : darkMode
-                  ? 'bg-gray-600 text-white'
+                  ? 'bg-white text-navy border-2 border-black'
+                  : selectedDate === date
+                  ? 'bg-coral text-white'
                   : 'bg-cream text-black'
               }`}
-              style={{
-                minWidth: '60px',
-                minHeight: '60px',
-                backgroundColor: 'transparent',
-              }}
             >
-              {isToday && (
-                <div
-                  className={`absolute w-10 h-10 rounded-full bg-white border-0 text-navy z-10`}
-                />
-              )}
-
-              {isSelected && (
-                <div
-                  className={`absolute w-10 h-10 rounded-full ${
-                    darkMode ? 'bg-sagegreen' : 'bg-coral'
-                  } border-0 z-10`}
-                />
-              )}
-
               <span className='relative z-20'>{day}</span>
             </button>
           );
         })}
       </div>
-
       {selectedDate && (
         <div
-          className={`absolute p-4 rounded-lg shadow-lg transition-all ${
-            darkMode ? 'bg-gray-700 text-cream' : 'bg-white text-navy'
-          }`}
+          className='absolute p-4 rounded-lg shadow-lg bg-white text-black'
           style={{
             width: '300px',
-            maxHeight: '400px',
-            overflowY: 'auto',
+            left: widgetPosition.left,
+            top: widgetPosition.top,
+            position: 'absolute',
+            transform: 'translate(-50%, -100%)',
             zIndex: 1000,
-            left: `${widgetPosition.left}px`,
-            top: `${widgetPosition.top}px`,
-            transform: `scale(${widgetScale}) translate(0, 0)`,
-            transition:
-              'transform 0.7s ease-in-out, left 0.7s ease-in-out, top 0.7s ease-in-out',
           }}
         >
           <h3 className='font-semibold text-xl mb-2'>
@@ -201,10 +155,9 @@ export default function CalendarWidget() {
           </h3>
           {tasksForSelectedDate.length > 0 ? (
             <ul>
-              {tasksForSelectedDate.map((task: any, index: number) => (
-                <li key={index} className='mb-2'>
-                  <div className='font-bold'>{task.title}</div>
-                  <div className='text-sm'>{task.description}</div>
+              {tasksForSelectedDate.map((task: any) => (
+                <li key={task.id} className='mb-2 p-2 border rounded'>
+                  {task.name}
                 </li>
               ))}
             </ul>
