@@ -24,6 +24,8 @@ export default function TaskForm({
     category: '',
   });
 
+  const categories = ['Work', 'Personal', 'Events', 'Important'];
+
   useEffect(() => {
     if (selectedTask) {
       setFormState(selectedTask);
@@ -83,37 +85,6 @@ export default function TaskForm({
     }
   };
 
-  const handleDelete = async () => {
-    if (!formState.id) return;
-
-    try {
-      const response = await fetch(`/api/tasks/${formState.id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete task');
-      }
-
-      console.log(`Task ${formState.id} deleted successfully`);
-
-      dispatch({ type: 'deleteTask', payload: formState.id });
-
-      setFormState({
-        id: '',
-        name: '',
-        description: '',
-        dueDate: '',
-        checklist: [],
-        category: '',
-      });
-
-      onFormSubmit && onFormSubmit();
-    } catch (error) {
-      console.error('Error deleting task:', error);
-    }
-  };
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -158,19 +129,26 @@ export default function TaskForm({
             : 'bg-yellow text-navy'
         }`}
       />
+      <label className='block font-bold mb-1'>Category:</label>
+      <select
+        name='category'
+        value={formState.category}
+        onChange={handleChange}
+        className={`block w-full mb-2 p-2 border rounded ${
+          darkMode ? 'bg-purple text-cream' : 'bg-yellow text-navy'
+        }`}
+      >
+        <option value=''>Select a category</option>
+        {categories.map((category) => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
       <div className='flex gap-4'>
         <button type='submit' className='bg-blue-500 text-white p-2 rounded'>
           {formState.id ? 'Update Task' : 'Add Task'}
         </button>
-        {formState.id && (
-          <button
-            type='button'
-            onClick={handleDelete}
-            className='bg-red-500 text-white p-2 rounded'
-          >
-            Delete Task
-          </button>
-        )}
       </div>
     </form>
   );
