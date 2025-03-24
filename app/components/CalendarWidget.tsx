@@ -1,40 +1,16 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { useTasks } from '../utils/TaskContext';
 import { useDarkMode } from '../utils/DarkModeContext';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 export default function CalendarWidget() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks] = useTasks(); // ✅ Using shared global task state
   const { darkMode } = useDarkMode();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [widgetPosition, setWidgetPosition] = useState<{
-    left: number;
-    top: number;
-  }>({
-    left: 0,
-    top: 0,
-  });
+  const [widgetPosition, setWidgetPosition] = useState({ left: 0, top: 0 });
   const [widgetScale, setWidgetScale] = useState(0);
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await fetch('/api/tasks');
-        if (!response.ok) {
-          throw new Error('Failed to fetch tasks');
-        }
-        const data = await response.json();
-        console.log('Fetched Tasks:', data);
-        setTasks(data);
-      } catch (error) {
-        console.error('Error fetching tasks:', error);
-      }
-    };
-
-    fetchTasks();
-  }, []);
 
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -47,7 +23,7 @@ export default function CalendarWidget() {
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   const tasksForSelectedDate = tasks.filter(
-    (task: any) => task.dueDate.split('T')[0] === selectedDate
+    (task: any) => task.dueDate?.split('T')[0] === selectedDate
   );
 
   const calendarRef = useRef(null);
@@ -104,6 +80,7 @@ export default function CalendarWidget() {
           <FiChevronRight size={24} />
         </button>
       </div>
+
       <div
         className='grid grid-cols-7 gap-6 text-center'
         style={{ gridAutoRows: '1fr' }}
@@ -138,6 +115,7 @@ export default function CalendarWidget() {
           );
         })}
       </div>
+
       {selectedDate && (
         <div
           className='absolute p-4 rounded-lg shadow-lg bg-white text-black'
