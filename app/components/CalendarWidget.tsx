@@ -5,8 +5,23 @@ import { useTasks } from '../utils/TaskContext';
 import { useDarkMode } from '../utils/DarkModeContext';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
+const getCategoryColor = (category: string) => {
+  switch (category?.toLowerCase()) {
+    case 'work':
+      return 'bg-green-400';
+    case 'personal':
+      return 'bg-blue-400';
+    case 'events':
+      return 'bg-purple-400';
+    case 'important':
+      return 'bg-red-500';
+    default:
+      return 'bg-gray-400';
+  }
+};
+
 export default function CalendarWidget() {
-  const [tasks] = useTasks(); // ✅ Using shared global task state
+  const [tasks] = useTasks();
   const { darkMode } = useDarkMode();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [widgetPosition, setWidgetPosition] = useState({ left: 0, top: 0 });
@@ -21,10 +36,6 @@ export default function CalendarWidget() {
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-
-  const tasksForSelectedDate = tasks.filter(
-    (task: any) => task.dueDate?.split('T')[0] === selectedDate
-  );
 
   const calendarRef = useRef(null);
 
@@ -43,6 +54,10 @@ export default function CalendarWidget() {
       setWidgetScale(1);
     }
   };
+
+  const tasksForSelectedDate = tasks.filter(
+    (task: any) => task.dueDate?.split('T')[0] === selectedDate
+  );
 
   return (
     <div
@@ -81,10 +96,7 @@ export default function CalendarWidget() {
         </button>
       </div>
 
-      <div
-        className='grid grid-cols-7 gap-6 text-center'
-        style={{ gridAutoRows: '1fr' }}
-      >
+      <div className='grid grid-cols-7 gap-6 text-center'>
         {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((day) => (
           <span key={day} className='font-bold text-lg'>
             {day}
@@ -98,11 +110,15 @@ export default function CalendarWidget() {
         {days.map((day) => {
           const date = formatDate(new Date(currentYear, currentMonth, day));
           const isToday = date === todayFormatted;
+          const dayTasks = tasks.filter(
+            (task: any) => task.dueDate?.split('T')[0] === date
+          );
+
           return (
             <button
               key={day}
               onClick={(event) => handleDayClick(day, event)}
-              className={`relative flex items-center justify-center h-14 w-14 rounded-full text-lg transition-transform hover:scale-110 ${
+              className={`relative flex flex-col items-center justify-center h-14 w-14 rounded-full text-lg transition-transform hover:scale-110 ${
                 isToday
                   ? 'bg-white text-navy border-2 border-black'
                   : selectedDate === date
@@ -111,6 +127,16 @@ export default function CalendarWidget() {
               }`}
             >
               <span className='relative z-20'>{day}</span>
+              <div className='flex gap-[2px] mt-1'>
+                {dayTasks.slice(0, 3).map((task: any, index: number) => (
+                  <span
+                    key={index}
+                    className={`w-2 h-2 rounded-full ${getCategoryColor(
+                      task.category
+                    )}`}
+                  ></span>
+                ))}
+              </div>
             </button>
           );
         })}
@@ -134,7 +160,15 @@ export default function CalendarWidget() {
           {tasksForSelectedDate.length > 0 ? (
             <ul>
               {tasksForSelectedDate.map((task: any) => (
-                <li key={task.id} className='mb-2 p-2 border rounded'>
+                <li
+                  key={task.id}
+                  className={`mb-2 p-2 border rounded flex items-center gap-2`}
+                >
+                  <span
+                    className={`w-3 h-3 rounded-full ${getCategoryColor(
+                      task.category
+                    )}`}
+                  ></span>
                   {task.name}
                 </li>
               ))}

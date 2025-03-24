@@ -4,11 +4,25 @@ import { useTasks } from '../utils/TaskContext';
 import { useDarkMode } from '../utils/DarkModeContext';
 import { FaExclamation } from 'react-icons/fa';
 
+const getCategoryColor = (category: string) => {
+  switch (category?.toLowerCase()) {
+    case 'work':
+      return 'bg-green-400';
+    case 'personal':
+      return 'bg-blue-400';
+    case 'events':
+      return 'bg-purple-400';
+    case 'important':
+      return 'bg-red-500';
+    default:
+      return 'bg-gray-400';
+  }
+};
+
 export default function TaskWidget() {
   const [tasks] = useTasks();
   const { darkMode } = useDarkMode();
 
-  // Filter for upcoming tasks (sorted by due date and exclude past tasks)
   const upcomingTasks = tasks
     .filter((task: any) => new Date(task.dueDate) >= new Date())
     .sort(
@@ -33,6 +47,11 @@ export default function TaskWidget() {
               }`}
             >
               <span className='flex items-center gap-2'>
+                <span
+                  className={`w-3 h-3 rounded-full ${getCategoryColor(
+                    task.category
+                  )}`}
+                ></span>
                 {task.category === 'important' && (
                   <FaExclamation className='text-red-500' />
                 )}
