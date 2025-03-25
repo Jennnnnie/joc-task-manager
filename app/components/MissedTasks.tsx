@@ -9,7 +9,7 @@ export default function MissedTasks() {
   const [tasks] = useTasks();
   const { darkMode } = useDarkMode();
   const missedTasks = tasks.filter(
-    (task) => !task.completed && new Date(task.dueDate) < new Date()
+    (task: any) => !task.completed && new Date(task.dueDate) < new Date()
   );
 
   return (
@@ -21,7 +21,7 @@ export default function MissedTasks() {
       <h2 className='text-lg font-bold mb-4'>Missed Tasks</h2>
       {missedTasks.length ? (
         <ul className='space-y-2'>
-          {missedTasks.map((task) => (
+          {missedTasks.map((task: any) => (
             <li
               key={task.id}
               className={`flex items-center justify-between p-2 ${

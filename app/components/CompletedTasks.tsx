@@ -8,7 +8,7 @@ import { getCategoryColor } from '../utils/categoryColors'; // Updated import
 export default function CompletedTasks() {
   const [tasks] = useTasks();
   const { darkMode } = useDarkMode();
-  const completedTasks = tasks.filter((task) => task.completed);
+  const completedTasks = tasks.filter((task: any) => task.completed);
 
   return (
     <div
@@ -19,7 +19,7 @@ export default function CompletedTasks() {
       <h2 className='text-lg font-bold mb-4'>Completed Tasks</h2>
       {completedTasks.length ? (
         <ul className='space-y-2'>
-          {completedTasks.map((task) => (
+          {completedTasks.map((task: any) => (
             <li
               key={task.id}
               className={`flex items-center justify-between p-2 ${
