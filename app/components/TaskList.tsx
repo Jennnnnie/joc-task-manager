@@ -16,6 +16,19 @@ export default function TaskList() {
   const [filterCategory, setFilterCategory] = useState('');
   const [filterDate, setFilterDate] = useState('');
 
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'Work':
+        return 'bg-green-300';
+      case 'Personal':
+        return 'bg-purple-300';
+      case 'Events':
+        return 'bg-blue-300';
+      default:
+        return '';
+    }
+  };
+
   const handleEditClick = (task: any) => {
     setEditingTaskId(task.id);
     setEditingTask({ ...task });
@@ -62,11 +75,11 @@ export default function TaskList() {
   const completedTasks = tasks.filter((task: any) => task.completed);
 
   const categories = [
-    { value: 'work', label: 'Work' },
-    { value: 'personal', label: 'Personal' },
-    { value: 'events', label: 'Events' },
+    { value: 'Work', label: 'Work' },
+    { value: 'Personal', label: 'Personal' },
+    { value: 'Events', label: 'Events' },
     {
-      value: 'important',
+      value: 'Important',
       label: (
         <>
           Important! <FaExclamation />
@@ -115,7 +128,6 @@ export default function TaskList() {
         />
       </div>
 
-      {/* Active tasks */}
       <div
         className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ${
           darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
@@ -128,28 +140,14 @@ export default function TaskList() {
               darkMode ? 'bg-graypurple text-cream' : 'bg-yellow text-navy'
             }`}
           >
-            {task.category && (
+            {task.category === 'Important' ? (
+              <FaExclamation className='text-red-500 text-xl absolute top-2 right-2' />
+            ) : (
               <div
-                className={`absolute top-2 right-2 ${
-                  task.category === 'important'
-                    ? 'text-red-500'
-                    : 'w-4 h-4 rounded-full'
-                } ${
-                  task.category === 'work'
-                    ? 'bg-green-300'
-                    : task.category === 'personal'
-                    ? 'bg-blue-300'
-                    : task.category === 'events'
-                    ? 'bg-purple-300'
-                    : task.category === 'important'
-                    ? ''
-                    : 'bg-gray-500'
-                }`}
-              >
-                {task.category === 'important' && (
-                  <FaExclamation className='text-xl' />
-                )}
-              </div>
+                className={`absolute top-2 right-2 w-4 h-4 rounded-full ${getCategoryColor(
+                  task.category
+                )}`}
+              />
             )}
 
             {editingTaskId === task.id ? (
@@ -183,7 +181,10 @@ export default function TaskList() {
                   name='dueDate'
                   value={editingTask.dueDate}
                   onChange={(e) =>
-                    setEditingTask({ ...editingTask, dueDate: e.target.value })
+                    setEditingTask({
+                      ...editingTask,
+                      dueDate: e.target.value,
+                    })
                   }
                   className={`block w-full mb-2 p-2 border rounded ${
                     darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
@@ -281,50 +282,6 @@ export default function TaskList() {
             )}
           </div>
         ))}
-      </div>
-
-      <div className='mt-8'>
-        <h2 className='text-lg font-bold mb-4'>Completed Tasks</h2>
-        <div
-          className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ${
-            darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
-          } p-4 rounded-lg`}
-        >
-          {completedTasks.map((task: any) => (
-            <div
-              key={task.id}
-              className={`relative border p-4 rounded shadow ${
-                darkMode ? 'bg-graypurple text-cream' : 'bg-yellow text-navy'
-              }`}
-            >
-              <h2 className='font-bold text-lg'>{task.name}</h2>
-              <p>{task.description}</p>
-              <p className='text-sm'>Completed</p>
-              <div className='flex gap-2 mt-4'>
-                <button
-                  onClick={() => handleMarkAsIncomplete(task)}
-                  className={`px-2 py-1 rounded ${
-                    darkMode
-                      ? 'bg-sagegreen text-cream hover:bg-yellow-700'
-                      : 'bg-yellow-500 text-black hover:bg-yellow-600'
-                  }`}
-                >
-                  Mark as Incomplete
-                </button>
-                <button
-                  onClick={() => handleDelete(task.id)}
-                  className={`px-2 py-1 rounded ${
-                    darkMode
-                      ? 'bg-red-600 text-cream hover:bg-red-700'
-                      : 'bg-red-500 text-white hover:bg-red-600'
-                  }`}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );

@@ -4,21 +4,8 @@ import { useRef, useState } from 'react';
 import { useTasks } from '../utils/TaskContext';
 import { useDarkMode } from '../utils/DarkModeContext';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-
-const getCategoryColor = (category: string) => {
-  switch (category?.toLowerCase()) {
-    case 'work':
-      return 'bg-green-400';
-    case 'personal':
-      return 'bg-blue-400';
-    case 'events':
-      return 'bg-purple-400';
-    case 'important':
-      return 'bg-red-500';
-    default:
-      return 'bg-gray-400';
-  }
-};
+import { FaExclamation } from 'react-icons/fa';
+import { getCategoryColor } from '../utils/categoryColors'; // <-- Updated import
 
 export default function CalendarWidget() {
   const [tasks] = useTasks();
@@ -36,8 +23,6 @@ export default function CalendarWidget() {
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-
-  const calendarRef = useRef(null);
 
   const handleDayClick = (day: number, event: any) => {
     const clickedDate = formatDate(new Date(currentYear, currentMonth, day));
@@ -61,7 +46,6 @@ export default function CalendarWidget() {
 
   return (
     <div
-      ref={calendarRef}
       className={`p-8 rounded-lg shadow-md ${
         darkMode ? 'bg-navy text-cream' : 'bg-cream text-navy'
       }`}
@@ -72,7 +56,7 @@ export default function CalendarWidget() {
           onClick={() =>
             setCurrentMonth((prev) => (prev === 0 ? 11 : prev - 1))
           }
-          className={`p-2 rounded-full transition-transform hover:scale-110 ${
+          className={`p-2 rounded-full hover:scale-110 transition-transform ${
             darkMode ? 'bg-gray-600 text-cream' : 'bg-yellow text-navy'
           }`}
         >
@@ -88,7 +72,7 @@ export default function CalendarWidget() {
           onClick={() =>
             setCurrentMonth((prev) => (prev === 11 ? 0 : prev + 1))
           }
-          className={`p-2 rounded-full transition-transform hover:scale-110 ${
+          className={`p-2 rounded-full hover:scale-110 transition-transform ${
             darkMode ? 'bg-gray-600 text-cream' : 'bg-yellow text-navy'
           }`}
         >
@@ -127,15 +111,26 @@ export default function CalendarWidget() {
               }`}
             >
               <span className='relative z-20'>{day}</span>
+
+              {/* Color dots under date */}
               <div className='flex gap-[2px] mt-1'>
-                {dayTasks.slice(0, 3).map((task: any, index: number) => (
-                  <span
-                    key={index}
-                    className={`w-2 h-2 rounded-full ${getCategoryColor(
-                      task.category
-                    )}`}
-                  ></span>
-                ))}
+                {dayTasks
+                  .slice(0, 3)
+                  .map((task: any) =>
+                    task.category?.toLowerCase() === 'important' ? (
+                      <FaExclamation
+                        key={task.id}
+                        className='text-red-500 text-xs'
+                      />
+                    ) : (
+                      <span
+                        key={task.id}
+                        className={`w-2 h-2 rounded-full ${getCategoryColor(
+                          task.category
+                        )}`}
+                      ></span>
+                    )
+                  )}
               </div>
             </button>
           );
@@ -149,7 +144,6 @@ export default function CalendarWidget() {
             width: '300px',
             left: widgetPosition.left,
             top: widgetPosition.top,
-            position: 'absolute',
             transform: 'translate(-50%, -100%)',
             zIndex: 1000,
           }}
@@ -162,13 +156,17 @@ export default function CalendarWidget() {
               {tasksForSelectedDate.map((task: any) => (
                 <li
                   key={task.id}
-                  className={`mb-2 p-2 border rounded flex items-center gap-2`}
+                  className='mb-2 p-2 border rounded flex items-center gap-2'
                 >
-                  <span
-                    className={`w-3 h-3 rounded-full ${getCategoryColor(
-                      task.category
-                    )}`}
-                  ></span>
+                  {task.category?.toLowerCase() === 'important' ? (
+                    <FaExclamation className='text-red-500 text-sm' />
+                  ) : (
+                    <span
+                      className={`w-3 h-3 rounded-full ${getCategoryColor(
+                        task.category
+                      )}`}
+                    ></span>
+                  )}
                   {task.name}
                 </li>
               ))}

@@ -3,21 +3,7 @@
 import { useTasks } from '../utils/TaskContext';
 import { useDarkMode } from '../utils/DarkModeContext';
 import { FaExclamation } from 'react-icons/fa';
-
-const getCategoryColor = (category: string) => {
-  switch (category?.toLowerCase()) {
-    case 'work':
-      return 'bg-green-400';
-    case 'personal':
-      return 'bg-blue-400';
-    case 'events':
-      return 'bg-purple-400';
-    case 'important':
-      return 'bg-red-500';
-    default:
-      return 'bg-gray-400';
-  }
-};
+import { getCategoryColor } from '../utils/categoryColors'; // <-- add this import
 
 export default function TaskWidget() {
   const [tasks] = useTasks();
@@ -47,13 +33,14 @@ export default function TaskWidget() {
               }`}
             >
               <span className='flex items-center gap-2'>
-                <span
-                  className={`w-3 h-3 rounded-full ${getCategoryColor(
-                    task.category
-                  )}`}
-                ></span>
-                {task.category === 'important' && (
-                  <FaExclamation className='text-red-500' />
+                {task.category === 'Important' ? (
+                  <FaExclamation className='text-red-500 text-sm' />
+                ) : (
+                  <span
+                    className={`w-3 h-3 rounded-full ${getCategoryColor(
+                      task.category
+                    )}`}
+                  ></span>
                 )}
                 {task.name}
               </span>

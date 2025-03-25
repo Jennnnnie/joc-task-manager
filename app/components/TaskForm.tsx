@@ -1,6 +1,5 @@
 'use client';
 
-import { FaExclamation } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import { useTasks } from '../utils/TaskContext';
 import { useDarkMode } from '../utils/DarkModeContext';
@@ -28,7 +27,10 @@ export default function TaskForm({
 
   useEffect(() => {
     if (selectedTask) {
-      setFormState(selectedTask);
+      setFormState({
+        ...selectedTask,
+        category: selectedTask.category || '',
+      });
     }
   }, [selectedTask]);
 
@@ -134,7 +136,8 @@ export default function TaskForm({
         name='category'
         value={formState.category}
         onChange={handleChange}
-        className={`block w-full mb-2 p-2 border rounded ${
+        required
+        className={`block w-full mb-4 p-2 border rounded ${
           darkMode ? 'bg-purple text-cream' : 'bg-yellow text-navy'
         }`}
       >

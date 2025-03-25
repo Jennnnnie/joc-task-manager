@@ -13,7 +13,8 @@ type Task = {
   name: string;
   description: string;
   dueDate: string;
-  completed: boolean; // Add this property
+  category: string;
+  completed: boolean;
 };
 
 type TaskAction =
@@ -21,7 +22,7 @@ type TaskAction =
   | { type: 'editTask'; payload: Task }
   | { type: 'deleteTask'; payload: string }
   | { type: 'setTasks'; payload: Task[] }
-  | { type: 'toggleComplete'; payload: string }; // New action to toggle completion
+  | { type: 'toggleComplete'; payload: string };
 
 const TasksReducer = (state: Task[], action: TaskAction): Task[] => {
   switch (action.type) {
@@ -35,7 +36,7 @@ const TasksReducer = (state: Task[], action: TaskAction): Task[] => {
       return state.filter((task) => task.id !== action.payload);
     case 'setTasks':
       return action.payload;
-    case 'toggleComplete': // New case
+    case 'toggleComplete':
       return state.map((task) =>
         task.id === action.payload
           ? { ...task, completed: !task.completed }
@@ -51,15 +52,15 @@ const TasksContext = createContext<any>(null);
 export const TasksProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(TasksReducer, []);
 
-  useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('tasks') || '[]');
-    if (storedData.length > 0)
-      dispatch({ type: 'setTasks', payload: storedData });
-  }, []);
+  const fetchTasks = async () => {
+    const res = await fetch('/api/tasks');
+    const tasks = await res.json();
+    dispatch({ type: 'setTasks', payload: tasks });
+  };
 
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(state));
-  }, [state]);
+    fetchTasks();
+  }, []);
 
   return (
     <TasksContext.Provider value={[state, dispatch]}>
@@ -71,5 +72,5 @@ export const TasksProvider = ({ children }: { children: ReactNode }) => {
 export const useTasks = () => {
   const context = useContext(TasksContext);
   if (!context) throw new Error('useTasks must be used within a Provider!');
-  return context; // Returns state and dispatch
+  return context;
 };
